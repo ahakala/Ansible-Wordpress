@@ -1,0 +1,15 @@
+---
+# tasks file for wordpress
+- name: Download wordpress
+  get_url: url=https://wordpress.org/latest.tar.gz dest=/tmp/wordpress.tar.gz validate_certs=no
+  sudo: yes
+
+- name: Extract Files
+  unarchive: src=/tmp/wordpress.tar.gz dest=/var/www copy=no
+  sudo: yes
+
+- name: Update Apache Default Site
+  sudo: yes
+  lineinfile: dest=/etc/apache2/sites-enabled/000-default.conf regexp="(.)+DocumentRoot /var/www/html" line="DocumentRoot /var/www/wordpress"
+  notify: restart apache
+  sudo: yes
